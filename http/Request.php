@@ -35,7 +35,7 @@ class Request
 
     public function file(string $key)
     {
-        return $this->file[$key] ?? null;
+        return $this->files[$key] ?? null;
     }
 
     public function method(): string
@@ -51,5 +51,9 @@ class Request
     public function cookie(string $key, $default = null)
     {
        return $this->cookie[$key] ?? $default;
+    }
+    public function uri(): string
+    {
+        return $this->uri;
     }
 }
