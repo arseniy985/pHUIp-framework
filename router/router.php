@@ -1,8 +1,8 @@
 <?php
 
-newRout("/", function () {
-	generatePage("start");
-});
-newRout("/test", function () {
+use app\controllers\MainController;
+
+getRoute("/", [MainController::class, 'generateTestPage']);
+getRoute("/test", function () {
 	generatePage("test");
 });

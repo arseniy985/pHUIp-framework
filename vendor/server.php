@@ -43,17 +43,27 @@ function startServer()
 		'svgz' => 'image/svg+xml',
 	));
 
-	require("./vendor/routerFunction.php");
-	$_SERVER["ROUTS"] = array();
+    require("./vendor/routerFunction.php");
+    $_SERVER["ROUTS"] = array();
 
+    include_once("./router/router.php");
 
-	include_once("./router/router.php");
-
-	if (isset($_SERVER["ROUTS"][URIPath])) {
-		$_SERVER["ROUTS"][URIPath]();
-	} else if (thisIsSourceFile(URIPath)) {
-		responseSourceFile(URIPath);
-	} else {
-		response404();
-	}
+    if (isset($_SERVER["ROUTS"][URIPath])) {
+        // Проверка, является ли значение массивом
+        if (is_array($_SERVER["ROUTS"][URIPath])) {
+            // Получение неймспейса и метода
+            list($namespace, $method) = $_SERVER["ROUTS"][URIPath];
+            // Вызов метода класса
+            $className = $namespace;
+            $instance = new $className;
+            call_user_func(array($instance, $method));
+        } else {
+            // Вызов обычной функции
+            $_SERVER["ROUTS"][URIPath]();
+        }
+    } else if (thisIsSourceFile(URIPath)) {
+        responseSourceFile(URIPath);
+    } else {
+        response404();
+    }
 }

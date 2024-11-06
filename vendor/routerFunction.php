@@ -108,6 +108,10 @@ function response404(): void
 {
 	http_response_code(404);
 }
+function response500(): void
+{
+    http_response_code(500);
+}
 
 /**
  * Функция которая проверяет содержит ли запрос обращение к файлу
@@ -141,11 +145,71 @@ function getFileContentType(string $filename): string
 
 /**
  * @param string $URI - путь 
- * @param callable $func - что будет происходить обращении по такому пути
+ * @param callable|array $func - если принимает массив, то первый элемент - неймспейс класса, второй - метод класса. Действие функции - что будет происходить обращении по такому пути
  */
-function newRout(string $URI, callable $func)
+function getRoute(string $URI, $func)
 {
-	$_SERVER["ROUTS"][$URI] = $func;
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (is_array($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } elseif (is_callable($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } else {
+            response500();
+        }
+    }
+}
+
+function postRoute(string $URI, $func)
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (is_array($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } elseif (is_callable($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } else {
+            response500();
+        }
+    }
+}
+
+function putRoute(string $URI, $func)
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+        if (is_array($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } elseif (is_callable($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } else {
+            response500();
+        }
+    }
+}
+
+function patchRoute(string $URI, $func)
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+        if (is_array($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } elseif (is_callable($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } else {
+            response500();
+        }
+    }
+}
+
+function deleteRoute(string $URI, $func)
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+        if (is_array($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } elseif (is_callable($func)) {
+            $_SERVER["ROUTS"][$URI] = $func;
+        } else {
+            response500();
+        }
+    }
 }
 /**
  * Создает страницу
