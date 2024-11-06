@@ -10,8 +10,6 @@ function getUriPath(string $str): string
 
 function startServer(): void
 {
-    require 'autoload.php';
-
 	/**
 	 * Путь к файлу без query string
 	 */
@@ -44,21 +42,15 @@ function startServer(): void
 		'svg' => 'image/svg+xml',
 		'svgz' => 'image/svg+xml',
 	));
-
     require("./vendor/routerFunction.php");
     $_SERVER["ROUTS"] = [];
 
     include_once("./router/router.php");
 
     if (isset($_SERVER["ROUTS"][URIPath])) {
-        // Проверка, является ли значение массивом
         if (is_array($_SERVER["ROUTS"][URIPath])) {
-            // Получение неймспейса и метода
-            list($namespace, $method) = $_SERVER["ROUTS"][URIPath];
-            // Вызов метода класса
-            $className = $namespace;
-            $instance = new $className;
-            call_user_func(array($instance, $method));
+            list($className, $method) = $_SERVER["ROUTS"][URIPath];
+            call_user_func(array(new $className, $method));
         } else {
             // Вызов обычной функции
             $_SERVER["ROUTS"][URIPath]();

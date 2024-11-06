@@ -1,5 +1,5 @@
 ### Описание
-Cервер на пхп, главное тут - генератор страниц.
+Самопис небольшой PHP фреймворк. Работает намного быстрее laravel, symphony и yii
 
 ### Настройка .htaccess для того чтобы все запросы ишли на один пхп файл
 ``` .htaccess
@@ -22,11 +22,11 @@ startServer();
 
 - Создание нового эндпоинта
   ```php
-  getRoute("/", function () {
+  Route::get("/", function () {
 		// code...
   });
   ИЛИ
-  getRoute(
+  Route::get(
     "/",  
     [
         MainController::class, /* неймспейс класса контроллера, полученный с помощью ::class */
@@ -35,12 +35,41 @@ startServer();
   )
   // тоже самое с остальными методами запроса (GET, POST и тд)
   ```
+  - Создание middleware для эндпоинта  
+    В него передается Request, необходимо его принять в аргументах.    
+  - Обязательно при использовании миддлевейра в аргументах контроллера указать Request
+    ```php
+      Route::get("/", function () {
+          // code...
+      })->middleware([TestMiddleware::class, "название метода"]);
+      // ИЛИ 
+      Route::get("/", function () {
+        //code...
+      })->middleware(function () {
+        // логика...
+        return true;
+      })
+    
+      // TestMiddleware.php (http/Middlewares создавать в этом неймспейсе и директории):
+      class TestMiddleware extends Middleware // обязательно наследование
+        {
+                public function test(Request $request): bool
+                {
+                    // логика...
+                    return true;
+                } 
+        }
+  
+    ```
 - Генерация страници и бандла для текущей страници
- 
   ```php
-  getRoute("/", function () {
- 	generatePage("start");
+  Route::get("/", function () {
+ 	    generatePage("start");
   });
+  ```
+- Везде можно создать экземпляр Request, если он не передан в аргументах
+  ```php 
+  $request = new Request;
   ```
 - получить Content-type файла
   ```php
@@ -57,5 +86,11 @@ startServer();
 - Ответ 500
   ```php
   response500()
+  ```
+- Ответ json
+  ```php 
+  // $data - информация в ответ
+  // $status - статус ответа
+  responseJson($data, $status)
   ```
 

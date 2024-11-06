@@ -9,14 +9,24 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
     public static $prefixLengthsPsr4 = array (
         'h' => 
         array (
+            'http\\Middlewares\\' => 17,
             'http\\Controllers\\' => 17,
+            'http\\' => 5,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'http\\Middlewares\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/http/Middlewares',
+        ),
         'http\\Controllers\\' => 
         array (
             0 => __DIR__ . '/../..' . '/http/Controllers',
+        ),
+        'http\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/http',
         ),
     );
 

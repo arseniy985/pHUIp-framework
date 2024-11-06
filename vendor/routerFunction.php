@@ -108,11 +108,28 @@ function response404(): void
     header("HTTP/1.0 404 Not Found");
     echo "<h1>404 Not Found</h1>";
     echo "The page that you are looking for might have been removed, had its name changed, or is temporarily unavailable.";
+    exit();
 }
 
 function response500(): void
 {
     http_response_code(500);
+    echo "<h1>Server error</h1>";
+    exit();
+}
+
+function responseJson(mixed $data, int $status) {
+    header("Content-type: " . MIME_TYPES['js']);
+    http_response_code($status);
+    echo json_encode($data);
+    exit();
+}
+
+function responseHtml(string $text, int $status) {
+    header("Content-type " . MIME_TYPES['html']);
+    http_response_code($status);
+    echo $text;
+    exit();
 }
 
 /**
@@ -145,74 +162,7 @@ function getFileContentType(string $filename): string
 }
 
 
-/**
- * @param string $URI - путь 
- * @param callable|array $func - если принимает массив, то первый элемент - неймспейс класса, второй - метод класса. Действие функции - что будет происходить обращении по такому пути
- */
-function getRoute(string $URI, callable|array $func): void
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        if (is_array($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } elseif (is_callable($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } else {
-            response500();
-        }
-    }
-}
 
-function postRoute(string $URI, $func): void
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (is_array($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } elseif (is_callable($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } else {
-            response500();
-        }
-    }
-}
-
-function putRoute(string $URI, $func): void
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-        if (is_array($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } elseif (is_callable($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } else {
-            response500();
-        }
-    }
-}
-
-function patchRoute(string $URI, $func): void
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
-        if (is_array($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } elseif (is_callable($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } else {
-            response500();
-        }
-    }
-}
-
-function deleteRoute(string $URI, $func): void
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-        if (is_array($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } elseif (is_callable($func)) {
-            $_SERVER["ROUTS"][$URI] = $func;
-        } else {
-            response500();
-        }
-    }
-}
 /**
  * Создает страницу
  * @param string $pageContainer имя контейнера `[name]`
@@ -220,16 +170,16 @@ function deleteRoute(string $URI, $func): void
  */
 function generatePage(string $pageContainer): void
 {
-	$css = "./css/[${pageContainer}]/";
-	$javascript = "./js/[${pageContainer}]";
-	$contentDir = "./pages/[${pageContainer}]";
+	$css = "./css/[$pageContainer]/";
+	$javascript = "./js/[$pageContainer]";
+	$contentDir = "./pages/[$pageContainer]";
 	if (is_dir($css)) {
-		$css = "./css/${pageContainer}/page.css";
+		$css = "./css/[$pageContainer]/page.css";
 	} else {
 		$css = "./css/page.css";
 	}
 	if (is_dir($javascript)) {
-		$javascript = "./js/${pageContainer}/page.js";
+		$javascript = "./js/[$pageContainer]/page.js";
 	} else {
 		$javascript = "./js/page.js";
 	}
