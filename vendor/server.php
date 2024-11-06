@@ -8,8 +8,10 @@ function getUriPath(string $str): string
 	return explode("?", $str)[0];
 }
 
-function startServer()
+function startServer(): void
 {
+    require 'autoload.php';
+
 	/**
 	 * Путь к файлу без query string
 	 */
@@ -44,7 +46,7 @@ function startServer()
 	));
 
     require("./vendor/routerFunction.php");
-    $_SERVER["ROUTS"] = array();
+    $_SERVER["ROUTS"] = [];
 
     include_once("./router/router.php");
 

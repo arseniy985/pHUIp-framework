@@ -1,9 +1,10 @@
 <?php
 
-namespace app\controllers;
+namespace http\Controllers;
 class MainController
 {
-    public function generateTestPage() {
-
+    public function generateTestPage(): void
+    {
+        generatePage('start');
     }
 }

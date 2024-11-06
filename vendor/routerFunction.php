@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 define("CSS_PATH", "./css/");
@@ -84,7 +83,7 @@ function genJSBundle(string $path): string
  * @param string $path путь к папке
  * @return string
  */
-function getFilesContent($path)
+function getFilesContent($path): string
 {
 	$filesData = "";
 	$dirFiles = scandir($path);
@@ -106,8 +105,11 @@ function getFilesContent($path)
  */
 function response404(): void
 {
-	http_response_code(404);
+    header("HTTP/1.0 404 Not Found");
+    echo "<h1>404 Not Found</h1>";
+    echo "The page that you are looking for might have been removed, had its name changed, or is temporarily unavailable.";
 }
+
 function response500(): void
 {
     http_response_code(500);
@@ -126,7 +128,7 @@ function thisIsSourceFile(string $filename): bool
 			return true;
 		} else {
 			$type = explode(".", $filename)[1]; // Тип файла
-			return MIME_TYPES[$type] ? true : false;
+			return (bool)MIME_TYPES[$type];
 		}
 	}
 }
@@ -147,7 +149,7 @@ function getFileContentType(string $filename): string
  * @param string $URI - путь 
  * @param callable|array $func - если принимает массив, то первый элемент - неймспейс класса, второй - метод класса. Действие функции - что будет происходить обращении по такому пути
  */
-function getRoute(string $URI, $func)
+function getRoute(string $URI, callable|array $func): void
 {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (is_array($func)) {
@@ -160,7 +162,7 @@ function getRoute(string $URI, $func)
     }
 }
 
-function postRoute(string $URI, $func)
+function postRoute(string $URI, $func): void
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (is_array($func)) {
@@ -173,7 +175,7 @@ function postRoute(string $URI, $func)
     }
 }
 
-function putRoute(string $URI, $func)
+function putRoute(string $URI, $func): void
 {
     if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         if (is_array($func)) {
@@ -186,7 +188,7 @@ function putRoute(string $URI, $func)
     }
 }
 
-function patchRoute(string $URI, $func)
+function patchRoute(string $URI, $func): void
 {
     if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
         if (is_array($func)) {
@@ -199,7 +201,7 @@ function patchRoute(string $URI, $func)
     }
 }
 
-function deleteRoute(string $URI, $func)
+function deleteRoute(string $URI, $func): void
 {
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         if (is_array($func)) {
@@ -216,7 +218,7 @@ function deleteRoute(string $URI, $func)
  * @param string $pageContainer имя контейнера `[name]`
  * @include "./router/Page.php"
  */
-function generatePage(string $pageContainer)
+function generatePage(string $pageContainer): void
 {
 	$css = "./css/[${pageContainer}]/";
 	$javascript = "./js/[${pageContainer}]";
