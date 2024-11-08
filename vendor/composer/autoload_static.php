@@ -13,6 +13,10 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
             'http\\Controllers\\' => 17,
             'http\\' => 5,
         ),
+        'A' => 
+        array (
+            'Auryn\\' => 6,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -27,6 +31,10 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         'http\\' => 
         array (
             0 => __DIR__ . '/../..' . '/http',
+        ),
+        'Auryn\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rdlowrey/auryn/lib',
         ),
     );
 

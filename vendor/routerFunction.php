@@ -162,28 +162,31 @@ function getFileContentType(string $filename): string
 }
 
 
-
 /**
  * Создает страницу
  * @param string $pageContainer имя контейнера `[name]`
+ * @param array $pageData переменные, которые передаются на страницу
  * @include "./router/Page.php"
  */
-function generatePage(string $pageContainer): void
+function generatePage(string $pageContainer, array $pageData = []): void
 {
-	$css = "./css/[$pageContainer]/";
-	$javascript = "./js/[$pageContainer]";
-	$contentDir = "./pages/[$pageContainer]";
+	$css = "./resources/pages/[$pageContainer]/css/";
+	$javascript = "./resources/pages/[$pageContainer]/js/";
+	$contentDir = "./resources/pages/[$pageContainer]/";
 	if (is_dir($css)) {
-		$css = "./css/[$pageContainer]/page.css";
+		$css .= "page.css";
 	} else {
-		$css = "./css/page.css";
+		$css = "./resources/pages/page.css";
 	}
 	if (is_dir($javascript)) {
-		$javascript = "./js/[$pageContainer]/page.js";
+		$javascript .= "page.js";
 	} else {
-		$javascript = "./js/page.js";
+		$javascript = "./resources/js/page.js";
 	}
 	$content = $contentDir . "/page.php";
+    $globalCss = "./resources/pages/global.css";
+
+    extract($pageData);
 
 	include_once("./router/Page.php");
 }

@@ -17,6 +17,43 @@ class Route
         $this->func = $func;
     }
 
+    private static function route(string $URI, callable|array $func): ?Route
+    {
+        if (is_array($func)) {
+            global $injector;
+            $_SERVER["ROUTS"][$URI] = function () use ($func, $injector) {
+                $arguments = [];
+                $reflection = new \ReflectionMethod($func[0], $func[1]);
+                foreach ($reflection->getParameters() as $parameter) {
+                    $class = $parameter->getType()->getName();
+                    if ($class) {
+                        $arguments[] = $injector->make($class);
+                    }
+                }
+
+                call_user_func_array([$injector->make($func[0]), $func[1]], $arguments);
+            };
+        } elseif (is_callable($func)) {
+            global $injector;
+            //  Обработка  простых  функций  с  зависимостями
+            $_SERVER["ROUTS"][$URI] = function () use ($func, $injector) {
+                $arguments = [];
+                $reflection = new ReflectionFunction($func);
+                foreach ($reflection->getParameters() as $parameter) {
+                    $class = $parameter->getType()->getName();
+                    if ($class) {
+                        $arguments[] = $container->make($class);
+                    }
+                }
+                call_user_func_array($func, $arguments);
+            };
+        } else {
+            response500();
+            return null;
+        }
+        return new Route($URI, $func);
+    }
+
     /**
      * @param string $URI - путь
      * @param callable|array $func - если принимает массив, то первый элемент - неймспейс класса, второй - метод класса. Действие функции - что будет происходить обращении по такому пути
@@ -24,15 +61,7 @@ class Route
     public static function get(string $URI, callable|array $func): null|Route
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (is_array($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } elseif (is_callable($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } else {
-                response500();
-                return null;
-            }
-            return new Route($URI, $func);
+            return self::route($URI, $func);
         }
         return null;
     }
@@ -40,14 +69,7 @@ class Route
     public static function post(string $URI, $func): null|Route
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (is_array($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } elseif (is_callable($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } else {
-                response500();
-            }
-            return new Route($URI, $func);
+            return self::route($URI, $func);
         }
         return null;
     }
@@ -55,14 +77,7 @@ class Route
     public static function put(string $URI, $func): null|Route
     {
         if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-            if (is_array($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } elseif (is_callable($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } else {
-                response500();
-            }
-            return new Route($URI, $func);
+            return self::route($URI, $func);
         }
         return null;
     }
@@ -70,14 +85,7 @@ class Route
     public static function patch(string $URI, $func): null|Route
     {
         if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
-            if (is_array($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } elseif (is_callable($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } else {
-                response500();
-            }
-            return new Route($URI, $func);
+            return self::route($URI, $func);
         }
         return null;
     }
@@ -85,14 +93,7 @@ class Route
     public static function delete(string $URI, $func): null|Route
     {
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-            if (is_array($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } elseif (is_callable($func)) {
-                $_SERVER["ROUTS"][$URI] = $func;
-            } else {
-                response500();
-            }
-            return new Route($URI, $func);
+            return self::route($URI, $func);
         }
         return null;
     }

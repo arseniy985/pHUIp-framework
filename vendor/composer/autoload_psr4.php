@@ -9,4 +9,5 @@ return array(
     'http\\Middlewares\\' => array($baseDir . '/http/Middlewares'),
     'http\\Controllers\\' => array($baseDir . '/http/Controllers'),
     'http\\' => array($baseDir . '/http'),
+    'Auryn\\' => array($vendorDir . '/rdlowrey/auryn/lib'),
 );

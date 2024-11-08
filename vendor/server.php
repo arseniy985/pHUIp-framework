@@ -49,13 +49,14 @@ function startServer(): void
     $_SERVER["ROUTS"] = [];
 
     include_once("./router/router.php");
+    
+
 
     if (isset($_SERVER["ROUTS"][URIPath])) {
         if (is_array($_SERVER["ROUTS"][URIPath])) {
             list($className, $method) = $_SERVER["ROUTS"][URIPath];
             call_user_func(array(new $className, $method));
         } else {
-            // Вызов обычной функции
             $_SERVER["ROUTS"][URIPath]();
         }
     } else if (thisIsSourceFile(URIPath)) {
