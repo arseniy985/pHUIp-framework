@@ -51,7 +51,7 @@ startServer();
       // TestMiddleware.php (http/Middlewares создавать в этом неймспейсе и директории):
       class TestMiddleware extends Middleware // обязательно наследование
         {
-                public function test(): bool
+                public function test(): true|false
                 {
                     // логика...
                     return true;
