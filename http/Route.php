@@ -105,18 +105,17 @@ class Route
     public function middleware(callable|array $middleware): Route
     {
         $_SERVER["ROUTS"][$this->URI] = function () use ($middleware) {
-            $request = new Request();
             try {
                 if (is_array($middleware)) {
-                    $result = call_user_func([new $middleware[0], $middleware[1]], $request);
+                    $result = call_user_func([new $middleware[0], $middleware[1]]);
                 } elseif (is_callable($middleware)) {
-                    $result = $middleware($request);
+                    $result = $middleware();
                 } else {
                     throw new \Exception("Неверный формат middleware");
                 }
 
                 if ($result !== false) {
-                    call_user_func($this->func, $request);
+                    call_user_func($this->func);
                 }
             } catch (\Exception $e) {
                 echo "Ошибка в middleware: " . $e->getMessage();

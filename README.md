@@ -35,9 +35,7 @@ startServer();
   )
   // тоже самое с остальными методами запроса (GET, POST и тд)
   ```
-  - Создание middleware для эндпоинта  
-    В него передается Request, необходимо его принять в аргументах.    
-  - Обязательно при использовании миддлевейра в аргументах контроллера указать Request
+  - Создание middleware для эндпоинта
     ```php
       Route::get("/", function () {
           // code...
@@ -53,7 +51,7 @@ startServer();
       // TestMiddleware.php (http/Middlewares создавать в этом неймспейсе и директории):
       class TestMiddleware extends Middleware // обязательно наследование
         {
-                public function test(Request $request): bool
+                public function test(): bool
                 {
                     // логика...
                     return true;
@@ -67,7 +65,8 @@ startServer();
  	    generatePage("start");
   });
   ```
-- Везде можно создать экземпляр Request, если он не передан в аргументах
+- Везде доступна константа REQUEST, обьект http\Request
+- Новую можно также обьявить самому
   ```php 
   $request = new Request;
   ```

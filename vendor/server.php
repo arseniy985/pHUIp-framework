@@ -1,5 +1,7 @@
 <?php
 
+use http\Request;
+
 /**
  * возвращает строку пути запроса к файлу или страницы без query string
  */
@@ -10,6 +12,7 @@ function getUriPath(string $str): string
 
 function startServer(): void
 {
+    define("REQUEST", new Request());
 	/**
 	 * Путь к файлу без query string
 	 */
