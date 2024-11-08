@@ -38,11 +38,11 @@ class Route
             //  Обработка  простых  функций  с  зависимостями
             $_SERVER["ROUTS"][$URI] = function () use ($func, $injector) {
                 $arguments = [];
-                $reflection = new ReflectionFunction($func);
+                $reflection = new \ReflectionFunction($func);
                 foreach ($reflection->getParameters() as $parameter) {
                     $class = $parameter->getType()->getName();
                     if ($class) {
-                        $arguments[] = $container->make($class);
+                        $arguments[] = $injector->make($class);
                     }
                 }
                 call_user_func_array($func, $arguments);

@@ -49,8 +49,6 @@ function startServer(): void
     $_SERVER["ROUTS"] = [];
 
     include_once("./router/router.php");
-    
-
 
     if (isset($_SERVER["ROUTS"][URIPath])) {
         if (is_array($_SERVER["ROUTS"][URIPath])) {
@@ -59,8 +57,6 @@ function startServer(): void
         } else {
             $_SERVER["ROUTS"][URIPath]();
         }
-    } else if (thisIsSourceFile(URIPath)) {
-        responseSourceFile(URIPath);
     } else {
         response404();
     }

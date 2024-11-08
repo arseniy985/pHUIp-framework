@@ -1,16 +1,11 @@
 <?php
 declare(strict_types=1);
 
-define("CSS_PATH", "./css/");
-define("JS_PATH", "./JS/");
 /**
  * Массивы с папками
  * @var array{css: array, js: array}
  */
-define("SOURCE_DIRS", array(
-	"css" => scandir(CSS_PATH),
-	"js" => scandir(JS_PATH)
-));
+
 /**
  * Путь к [name]
  */
@@ -19,85 +14,6 @@ define("PAGE_WRAPPER", explode("/", URIPath));
 function responseContentType(string $filepath): void
 {
 	header("Content-type: " . getFileContentType($filepath));
-}
-/** 
- * Функция которая находит файл и возвращает его пользователю если файл не найден отвечает `response404()`;
- * @param string $filename - путь к файлу и это путь должен начинаться с `/`
- */
-function responseSourceFile(string $filename): void
-{
-	try {
-		$reqContentType = getFileContentType($filename);
-		header("Content-type: " . $reqContentType);
-		if ($reqContentType == MIME_TYPES['css']) {
-			foreach (SOURCE_DIRS["css"] as $item) {
-				if ($item === "[" . PAGE_WRAPPER[2] . "]") {
-					echo genCSSBundle(CSS_PATH . $item);
-					exit();
-				}
-			}
-		} else if ($reqContentType == MIME_TYPES['js']) {
-			foreach (SOURCE_DIRS["js"] as $item) {
-				if ($item === "[" . PAGE_WRAPPER[2] . "]") {
-					echo genJSBundle(JS_PATH . $item);
-					exit();
-				}
-			}
-		}
-		if (".$filename" === "./css/page.css") {
-			echo file_get_contents(CSS_PATH . "global.css");
-			exit();
-		} else if (".$filename" === "./js/page.js") {
-			echo file_get_contents(JS_PATH . "global.js");
-			exit();
-		} else if (!file_exists(".$filename")) throw new Exception("Error Processing Request", 1);
-
-		echo file_get_contents(".$filename");
-	} catch (\Throwable $th) {
-		response404();
-	}
-}
-/**
- * Создаёт CSS бандл 
- * @param string $path путь к папке
- * @return string
- */
-function genCSSBundle(string $path): string
-{
-	$bundle = file_get_contents(CSS_PATH . "global.css");
-	return $bundle . "\n" . getFilesContent($path);
-}
-/**
- * Создаёт JS бандл 
- * @param string $path путь к папке
- * @return string
- */
-function genJSBundle(string $path): string
-{
-	$bundle = file_get_contents(JS_PATH . "global.js");
-
-	return $bundle . "\n" . getFilesContent($path);
-}
-/**
- * Получает контент из [name] папки и подпапок
- * @param string $path путь к папке
- * @return string
- */
-function getFilesContent($path): string
-{
-	$filesData = "";
-	$dirFiles = scandir($path);
-	foreach ($dirFiles as $item) {
-		if ($item != "." && $item != "..") {
-			$filepath = "$path/$item";
-			if (is_file($filepath)) {
-				$filesData = $filesData . file_get_contents("$filepath") . "\n";
-			} else {
-				$filesData = $filesData . "\n" . getFilesContent("$filepath");
-			}
-		}
-	}
-	return $filesData;
 }
 
 /**
@@ -118,7 +34,8 @@ function response500(): void
     exit();
 }
 
-function responseJson(mixed $data, int $status) {
+function responseJson(mixed $data, int $status): void
+{
     header("Content-type: " . MIME_TYPES['js']);
     http_response_code($status);
     echo json_encode($data);

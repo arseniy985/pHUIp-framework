@@ -5,7 +5,9 @@ use http\Middlewares\TestMiddleware;
 use http\Route;
 
 Route::get("/", [MainController::class, "generateTestPage"]);
-Route::get("/injectiontest", [MainController::class, "testInjection"]);
+Route::get("/injectiontest", function (\http\Request $request) {
+    responseHtml(print_r($request, true), 200);
+});
 Route::get("/testmiddleware", function () {
     print_r(REQUEST);
     generatePage('test');
