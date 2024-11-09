@@ -1,14 +1,13 @@
 <?php
 
+use Auryn\Injector;
 use http\Request;
 
 require './vendor/autoload.php';
-require "./vendor/server.php";
+require "./http/app/server.php";
 
-$injector = new \Auryn\Injector();
-
+$injector = new Injector();
 $injector->alias(Request::class, Request::class);
-
 global $injector;
 
 startServer();

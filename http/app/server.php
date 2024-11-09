@@ -45,7 +45,7 @@ function startServer(): void
 		'svg' => 'image/svg+xml',
 		'svgz' => 'image/svg+xml',
 	));
-    require("./vendor/routerFunction.php");
+    require("./http/app/routerFunction.php");
     $_SERVER["ROUTS"] = [];
 
     include_once("./router/router.php");
