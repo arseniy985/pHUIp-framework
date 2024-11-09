@@ -19,7 +19,7 @@ class Route
 
     private static function route(string $URI, callable|array $func): ?Route
     {
-        if (is_array($func)) {
+        if (is_array($func) || is_callable($func)) {
             global $injector;
             $_SERVER["ROUTS"][$URI] = function () use ($func, $injector) {
                 $arguments = [];
@@ -32,20 +32,6 @@ class Route
                 }
 
                 call_user_func_array([$injector->make($func[0]), $func[1]], $arguments);
-            };
-        } elseif (is_callable($func)) {
-            global $injector;
-            //  Обработка  простых  функций  с  зависимостями
-            $_SERVER["ROUTS"][$URI] = function () use ($func, $injector) {
-                $arguments = [];
-                $reflection = new \ReflectionFunction($func);
-                foreach ($reflection->getParameters() as $parameter) {
-                    $class = $parameter->getType()->getName();
-                    if ($class) {
-                        $arguments[] = $injector->make($class);
-                    }
-                }
-                call_user_func_array($func, $arguments);
             };
         } else {
             response500();

@@ -10,16 +10,17 @@ function getUriPath(string $str): string
 	return explode("?", $str)[0];
 }
 
+/**
+ * @param callable $func та функция замер которой производится
+ * @return mixed значение которое возвращает переданная коллбек функция
+ * Замеряет сколько выполняется код в microtime
+ */
 function debugTime(callable $func): mixed
 {
     $startTime = microtime(true);
     $res = $func();
     $endTime = microtime(true);
-    echo $endTime-$startTime;
-    if ($res) {
-        return $res;
-    }
-    return null;
+    return $endTime-$startTime;
 }
 
 function startServer(): void

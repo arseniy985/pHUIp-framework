@@ -13,7 +13,10 @@
 ```
 ### `index.php` на который будут идти все запросы
 ```php
+require './vendor/autoload.php';
 require "./vendor/server.php";
+
+// подключения доп библиотек, контейнера  и орм
 
 startServer();
 ```
