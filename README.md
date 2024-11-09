@@ -187,4 +187,11 @@ startServer();
   // $status - статус ответа
   responseHtml($data, $status)
   ```
-
+## Функции - помошники
+- Замер времени выполнения кода
+  ```php
+  $time = debugTime(function () {
+    //любой код
+  });
+  //возвращает microtime выполнения кода
+  ```

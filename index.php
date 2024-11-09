@@ -33,6 +33,4 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-
-
 startServer();

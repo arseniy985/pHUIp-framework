@@ -1,4 +1,21 @@
 {
+  "name": "arseniy985/pHUIp",
+  "type": "library",
+  "description": "PHP фреймворк, взял самое лучшее из доступного, сделал простые не сильно нагруженные реализации разных механизмов и добавил свои фишки. Получился фреймворк, который намного быстрее своих аналогов.",
+  "keywords": [
+    "php",
+    "framework",
+    "web development",
+    "routing",
+    "depencidy injection",
+    "container",
+    "mvc"
+  ],
+  "license": "MIT",
+  "authors": [{
+      "name": "Arseniy Druzhinin",
+      "email": "arseniydruzhinin985@gmail.com"
+    }],
   "autoload": {
     "psr-4": {
       "http\\Controllers\\": "http/Controllers",
@@ -10,6 +27,7 @@
     }
   },
   "require": {
+    "php": ">=7",
     "rdlowrey/auryn": "^1.4",
     "illuminate/database": "^11.30",
     "vlucas/phpdotenv": "^5.6",
