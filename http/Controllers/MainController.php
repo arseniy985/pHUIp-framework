@@ -2,13 +2,18 @@
 
 namespace http\Controllers;
 
+use Database\Models\Post;
 use http\Request;
 
 class MainController
 {
     public function generateTestPage(): void
     {
-        generatePage('start');
+        $post = Post::create([
+            'title' => "huihuihuhiu",
+            'content' => "sdfosdfp[ofp[dsdfsf"
+        ]);
+        generatePage('start', ['post' => $post]);
     }
 
     public function testInjection(Request $request): void

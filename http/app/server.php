@@ -10,14 +10,22 @@ function getUriPath(string $str): string
 	return explode("?", $str)[0];
 }
 
+function debugTime(callable $func): void
+{
+    $startTime = microtime(true);
+    $func();
+    $endTime = microtime(true);
+    echo $endTime-$startTime;
+}
+
 function startServer(): void
 {
-    define("REQUEST", new Request());
-	/**
+    /**
 	 * Путь к файлу без query string
 	 */
 	define("URIPath", getUriPath($_SERVER['REQUEST_URI']));
-	/**
+
+    /**
 	 * Массив Content-types
 	 */
 	define("MIME_TYPES", array(

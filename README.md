@@ -115,6 +115,54 @@ startServer();
   ```
 - Шаблон страницы находится в router/Page.php
 
+## ORM (работа с базой данных)
+- Здесь встроена orm от laravel - Eloquent. Имеет точно такие же методы.
+- При этом миграции делаются сами.
+- Перед началом работы необходимо заполнить .env:
+  ```dotenv
+  DB_DRIVER=mysql
+  DB_HOST=localhost
+  DB_NAME=frameworktest
+  DB_USER=root
+  DB_PASSWORD=root
+  ```
+- Модели создаются в database/model и обязательно наследуются от use Illuminate\Database\Eloquent\Model.
+  ```php
+  namespace Database\Models;
+
+  use Illuminate\Database\Eloquent\Model;
+
+  class Post extends Model
+  {
+    // таблица привязанная к этой модели
+    protected $table = 'posts';
+
+    protected $fillable = ['title', 'content'];
+  }
+  ```
+- Использование этих моделей делается в соответствии с документацией Eloquent  https://laravel.com/docs/11.x/eloquent
+- В каждую запись вставляются created_at и updated_at формата datetime.
+  ```sql
+  CREATE TABLE posts (
+    id int unsigned auto_increment primary key ,
+    title varchar(300) not null,
+    content varchar(1500) not null,
+    updated_at datetime not null,
+    created_at datetime not null
+  )
+  ```
+- В случае если хотите их отключить можно указать  
+  ```php
+  class Post extends Model
+  {
+    protected $table = 'posts';
+
+    protected $fillable = ['title', 'content'];
+
+    // указываем тут
+    public $timestamps = false;
+  }
+  ```
 ## Ответы
 - Ответ 404 
   ```php

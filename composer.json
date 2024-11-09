@@ -3,10 +3,16 @@
     "psr-4": {
       "http\\Controllers\\": "http/Controllers",
       "http\\Middlewares\\": "http/Middlewares",
-      "http\\": "http/"
+      "http\\": "http/",
+
+      "Database\\Models\\": "database/models",
+      "Database\\": "database/"
     }
   },
   "require": {
-    "rdlowrey/auryn": "^1.4"
+    "rdlowrey/auryn": "^1.4",
+    "illuminate/database": "^11.30",
+    "vlucas/phpdotenv": "^5.6",
+    "laravel/serializable-closure": "^1.3"
   }
 }
