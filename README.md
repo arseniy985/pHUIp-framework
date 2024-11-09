@@ -1,6 +1,11 @@
 ### Описание
 Самопис небольшой PHP фреймворк. Работает намного быстрее laravel, symphony и yii
 
+### Установка
+```shell
+$ composer install
+```
+
 ### Настройка .htaccess для того чтобы все запросы ишли на один пхп файл
 ``` .htaccess
 <IfModule mod_rewrite.c>
