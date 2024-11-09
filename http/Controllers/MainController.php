@@ -9,11 +9,8 @@ class MainController
 {
     public function generateTestPage(): void
     {
-        $post = Post::create([
-            'title' => "huihuihuhiu",
-            'content' => "sdfosdfp[ofp[dsdfsf"
-        ]);
-        generatePage('start', ['post' => $post]);
+        $posts = Post::all();
+        generatePage('start', ['posts' => $posts]);
     }
 
     public function testInjection(Request $request): void

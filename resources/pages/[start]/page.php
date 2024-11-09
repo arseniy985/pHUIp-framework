@@ -1,9 +1,11 @@
-<?php /** @var \Database\Models\Post $post */
-print_r($post->title); ?>
+<?php /** @var \Database\Models\Post $posts */ ?>
 
-<h1>Hello world</h1>
-<h1>0</h1>
-<button id="p">+</button>
-<button id="m">-</button>
-
+<h1>Тест страничка</h1>
+<main>
+    <?php foreach ($posts as $post): ?>
+    <h2><?=$post->title ?></h2>
+    <p><?=$post->content ?></p>
+    <hr></hr>
+    <?php endforeach; ?>
+</main>
 

@@ -10,12 +10,16 @@ function getUriPath(string $str): string
 	return explode("?", $str)[0];
 }
 
-function debugTime(callable $func): void
+function debugTime(callable $func): mixed
 {
     $startTime = microtime(true);
-    $func();
+    $res = $func();
     $endTime = microtime(true);
     echo $endTime-$startTime;
+    if ($res) {
+        return $res;
+    }
+    return null;
 }
 
 function startServer(): void
