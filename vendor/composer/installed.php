@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => '__root__',
+        'name' => 'arseniy985/phuip',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '568cdfcd59987184db29be41bad2a6ae78bb56c6',
+        'reference' => '5e06c0dd11cf8eadc35f6acb22fcc62953f1335e',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        '__root__' => array(
+        'arseniy985/phuip' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '568cdfcd59987184db29be41bad2a6ae78bb56c6',
+            'reference' => '5e06c0dd11cf8eadc35f6acb22fcc62953f1335e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
