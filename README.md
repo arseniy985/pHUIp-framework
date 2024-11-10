@@ -3,7 +3,11 @@
 
 ### Установка
 ```shell
-$ composer install
+$ composer require arseniy985/phuip
+
+ИЛИ 
+
+$ git clone https://github.com/arseniy985/pHUIp-framework/
 ```
 
 ### Настройка .htaccess для того чтобы все запросы ишли на один пхп файл
