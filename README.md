@@ -43,12 +43,14 @@ startServer();
   )
   // тоже самое с остальными методами запроса (GET, POST и тд)
   ```
-  - Создание middleware для эндпоинта
+  - Создание middleware для эндпоинта. Обязательно содержит метод handle, в котором есть вся логика
   ```php
   Route::get("/", function () {
       // code...
   })->middleware([TestMiddleware::class, "название метода"]);
-  // ИЛИ 
+  
+  ИЛИ 
+  
   Route::get("/", function () {
     //code...
   })->middleware(function () {
@@ -59,7 +61,7 @@ startServer();
   // TestMiddleware.php (http/Middlewares создавать в этом неймспейсе и директории):
   class TestMiddleware extends Middleware // обязательно наследование
     {
-            public function test(): true|false
+            public function handle(): true|false
             {
                 // логика...
                 return true;
@@ -199,4 +201,8 @@ startServer();
     //любой код
   });
   //возвращает microtime выполнения кода
+  ```
+- Получение переменной из .env 
+  ```php
+  config($ключ);
   ```
