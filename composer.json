@@ -27,7 +27,7 @@
     }
   },
   "require": {
-    "php": ">=7.1",
+    "php": ">=8.0",
     "rdlowrey/auryn": "^1.4",
     "illuminate/database": "^11.30",
     "vlucas/phpdotenv": "^5.6",
