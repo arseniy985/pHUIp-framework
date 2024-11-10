@@ -6,9 +6,11 @@ use http\Request;
 
 class TestMiddleware extends Middleware
 {
-    public function test(): bool
+    public function handle(Request $request): bool
     {
-        responseHtml(print_r(REQUEST, true), 200);
+        if (true) {
+            return true;
+        }
         return false;
     }
 }

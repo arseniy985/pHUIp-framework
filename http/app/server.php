@@ -23,6 +23,11 @@ function debugTime(callable $func): mixed
     return $endTime-$startTime;
 }
 
+function env(string $key)
+{
+    return $_ENV[$key];
+}
+
 function startServer(): void
 {
     /**

@@ -2,7 +2,8 @@
 
 namespace http\Middlewares;
 
-class Middleware
+abstract class Middleware
 {
 
 }
+

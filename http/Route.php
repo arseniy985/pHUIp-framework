@@ -2,10 +2,13 @@
 
 namespace http;
 
+use ReflectionFunction;
+use ReflectionMethod;
+
 class Route
 {
     private string $URI;
-    private mixed $func;
+    private $func;
 
     /**
      * @param string $URI
@@ -19,25 +22,26 @@ class Route
 
     private static function route(string $URI, callable|array $func): ?Route
     {
-        if (is_array($func) || is_callable($func)) {
-            global $injector;
-            $_SERVER["ROUTS"][$URI] = function () use ($func, $injector) {
-                $arguments = [];
-                $reflection = new \ReflectionMethod($func[0], $func[1]);
-                foreach ($reflection->getParameters() as $parameter) {
-                    $class = $parameter->getType()->getName();
-                    if ($class) {
-                        $arguments[] = $injector->make($class);
-                    }
-                }
-
-                call_user_func_array([$injector->make($func[0]), $func[1]], $arguments);
-            };
-        } else {
-            response500();
-            return null;
+        global $injector;
+        $arguments = [];
+        $reflection = is_array($func) ?  new ReflectionMethod($func[0], $func[1]): new ReflectionFunction($func);
+        foreach ($reflection->getParameters() as $parameter) {
+            $class = $parameter->getType()->getName();
+            if ($class) {
+                $arguments[] = $injector->make($class);
+            }
         }
-        return new Route($URI, $func);
+
+        $callback = function () use ($arguments, $injector, $func) {
+            is_array($func) ?
+                call_user_func_array([$injector->make($func[0]), $func[1]], $arguments) :
+                call_user_func_array($func, $arguments);
+        };
+
+        $_SERVER['ROUTS'][$URI] = $callback;
+
+
+        return new Route($URI, $callback);
     }
 
     /**
@@ -86,26 +90,30 @@ class Route
 
     /**
      * Прослойка между контроллером и запросом
-     * @param callable|array $middleware
+     * @param callable|string $middleware
      * @return Route
      */
-    public function middleware(callable|array $middleware): Route
+    public function middleware(callable|string $middleware): Route
     {
-        $_SERVER["ROUTS"][$this->URI] = function () use ($middleware) {
-            try {
-                if (is_array($middleware)) {
-                    $result = call_user_func([new $middleware[0], $middleware[1]]);
-                } elseif (is_callable($middleware)) {
-                    $result = $middleware();
-                } else {
-                    throw new \Exception("Неверный формат middleware");
-                }
+        $method = "handle";
+        global $injector;
+        $arguments = [];
+        $reflection = is_array($middleware) ? new ReflectionMethod($middleware, $method): new ReflectionFunction($middleware);
+        foreach ($reflection->getParameters() as $parameter) {
+            $class = $parameter->getType()->getName();
+            if ($class) {
+                $arguments[] = $injector->make($class);
+            }
+        }
 
-                if ($result !== false) {
-                    call_user_func($this->func);
-                }
-            } catch (\Exception $e) {
-                echo "Ошибка в middleware: " . $e->getMessage();
+        $callback = function () use ($method, $arguments, $injector, $middleware) {
+            return is_array($middleware) ?
+                call_user_func_array([$injector->make($middleware), $method], $arguments) :
+                call_user_func_array($middleware, $arguments);
+        };
+        $_SERVER['ROUTS'][$this->URI] = function () use ($callback) {
+            if ($callback()) {
+                call_user_func($this->func);
             }
         };
         return $this;

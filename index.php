@@ -21,11 +21,11 @@ $dotenv->load();
 // инициализация orm
 $capsule = new Manager();
 $capsule->addConnection([
-        'driver'    => $_ENV['DB_DRIVER'],
-        'host'      => $_ENV['DB_HOST'],
-        'database'  => $_ENV['DB_NAME'],
-        'username'  => $_ENV['DB_USER'],
-        'password'  => $_ENV['DB_PASSWORD'],
+        'driver'    => env('DB_DRIVER'),
+        'host'      => env('DB_HOST'),
+        'database'  => env('DB_NAME'),
+        'username'  => env('DB_USER'),
+        'password'  => env('DB_PASSWORD'),
         'charset'   => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'prefix'    => '',

@@ -27,10 +27,10 @@ function response404(): void
     exit();
 }
 
-function response500(): void
+function response500(string $err = ""): void
 {
     http_response_code(500);
-    echo "<h1>Server error</h1>";
+    echo "<h1>$err</h1>";
     exit();
 }
 
