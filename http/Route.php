@@ -98,7 +98,7 @@ class Route
         $method = "handle";
         global $injector;
         $arguments = [];
-        $reflection = is_array($middleware) ? new ReflectionMethod($middleware, $method): new ReflectionFunction($middleware);
+        $reflection = is_string($middleware) ? new ReflectionMethod($middleware, $method): new ReflectionFunction($middleware);
         foreach ($reflection->getParameters() as $parameter) {
             $class = $parameter->getType()->getName();
             if ($class) {
@@ -107,7 +107,7 @@ class Route
         }
 
         $callback = function () use ($method, $arguments, $injector, $middleware) {
-            return is_array($middleware) ?
+            return is_string($middleware) ?
                 call_user_func_array([$injector->make($middleware), $method], $arguments) :
                 call_user_func_array($middleware, $arguments);
         };
