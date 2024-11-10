@@ -3,7 +3,7 @@
         'name' => 'arseniy985/phuip',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '8726cb491d7c512e9006ff1652dd123c2eb12335',
+        'reference' => '816e48dc8bb605438c8ff9743b58435a275398b1',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'arseniy985/phuip' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '8726cb491d7c512e9006ff1652dd123c2eb12335',
+            'reference' => '816e48dc8bb605438c8ff9743b58435a275398b1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
