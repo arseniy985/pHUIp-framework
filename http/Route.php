@@ -24,7 +24,7 @@ class Route
     {
         global $injector;
         $arguments = [];
-        $reflection = is_array($func) ?  new ReflectionMethod($func[0], $func[1]): new ReflectionFunction($func);
+        $reflection = is_array($func) ? new ReflectionMethod($func[0], $func[1]): new ReflectionFunction($func);
         foreach ($reflection->getParameters() as $parameter) {
             $class = $parameter->getType()->getName();
             if ($class) {
@@ -96,6 +96,7 @@ class Route
     public function middleware(callable|string $middleware): Route
     {
         $method = "handle";
+
         global $injector;
         $arguments = [];
         $reflection = is_string($middleware) ? new ReflectionMethod($middleware, $method): new ReflectionFunction($middleware);

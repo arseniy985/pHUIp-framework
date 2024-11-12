@@ -23,6 +23,12 @@ class Request
         $this->method = $_SERVER['REQUEST_METHOD'];
     }
 
+    public function header(string $key, string $default = null): string
+    {
+        $key = "HTTP_" . strtoupper($key);
+        return $_SERVER[$key] ?? $default;
+    }
+
     public function get(string $key, $default = null)
     {
         return $this->get[$key] ?? $default;
@@ -43,9 +49,9 @@ class Request
         return $this->method;
     }
 
-    public function server(): array
+    public function server(string $key): array
     {
-        return $this->server;
+        return $this->server[$key];
     }
 
     public function cookie(string $key, $default = null)

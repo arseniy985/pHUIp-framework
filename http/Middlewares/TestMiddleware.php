@@ -6,7 +6,7 @@ use http\Request;
 
 class TestMiddleware extends Middleware
 {
-    public function handle(Request $request): bool
+    public function handle(): bool
     {
         if (true) {
             return true;
