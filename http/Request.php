@@ -25,8 +25,7 @@ class Request
 
     public function header(string $key, string $default = null): string
     {
-        $key = "HTTP_" . strtoupper($key);
-        return $_SERVER[$key] ?? $default;
+        return $_SERVER["HTTP_" . strtoupper($key)] ?? $default;
     }
 
     public function get(string $key, $default = null)
@@ -41,7 +40,7 @@ class Request
 
     public function file(string $key)
     {
-        return $this->files[$key] ?? null;
+        return $this->files[$key];
     }
 
     public function method(): string

@@ -51,7 +51,7 @@ startServer();
   ```php
   Route::get("/", function () {
       // code...
-  })->middleware([TestMiddleware::class, "название метода"]);
+  })->middleware(TestMiddleware::class);
   
   ИЛИ 
   
