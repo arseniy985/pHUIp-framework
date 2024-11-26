@@ -4,8 +4,8 @@ use http\Controllers\TestController;
 use http\Middlewares\TestMiddleware;
 use http\Route;
 
-Route::get("/", function () {
+Route::get("/{id}", function () {
     echo "Hello World!";
 });
-Route::get("/testroute", [TestController::class, "test"])
+Route::get("/", [TestController::class, "test"])
     ->middleware(TestMiddleware::class);

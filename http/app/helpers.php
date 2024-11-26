@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use http\Request;
+
 /**
  * Массивы с папками
  * @var array{css: array, js: array}
@@ -78,32 +80,6 @@ function getFileContentType(string $filename): string
 	return MIME_TYPES[$type] ? MIME_TYPES[$type] : "text/plain";
 }
 
-
-/**
- * Создает страницу
- * @param string $pageContainer имя контейнера `[name]`
- * @param array $pageData переменные, которые передаются на страницу
- * @include "./router/Page.php"
- */
-function generatePage(string $pageContainer, array $pageData = []): void
-{
-	$css = "./resources/pages/[$pageContainer]/css/";
-	$javascript = "./resources/pages/[$pageContainer]/js/";
-	$contentDir = "./resources/pages/[$pageContainer]/";
-	if (is_dir($css)) {
-		$css .= "page.css";
-	} else {
-		$css = "./resources/pages/page.css";
-	}
-	if (is_dir($javascript)) {
-		$javascript .= "page.js";
-	} else {
-		$javascript = "./resources/js/page.js";
-	}
-	$content = $contentDir . "/page.php";
-    $globalCss = "./resources/pages/global.css";
-
-    extract($pageData);
-
-	include_once("./router/Page.php");
+function request(): Request {
+    return new Request();
 }

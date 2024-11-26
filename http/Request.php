@@ -11,6 +11,7 @@ class Request
     private array $files;
     private string $method;
     private string $uri;
+    private array $routeParams = [];
 
     public function __construct()
     {
@@ -48,15 +49,48 @@ class Request
         return $this->method;
     }
 
-    public function server(string $key): array
+    public function server(string $key = null): string|array
     {
-        return $this->server[$key];
+        if ($key === null) {
+            return $this->server;
+        }
+        return $this->server[$key] ?? '';
+    }
+
+    /**
+     * Устанавливает параметры маршрута
+     * @param array $params
+     */
+    public function setRouteParams(array $params): void
+    {
+        $this->routeParams = $params;
+    }
+
+    /**
+     * Получает значение параметра маршрута
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function param(string $key, $default = null)
+    {
+        return $this->routeParams[$key] ?? $default;
+    }
+
+    /**
+     * Получает все параметры маршрута
+     * @return array
+     */
+    public function params(): array
+    {
+        return $this->routeParams;
     }
 
     public function cookie(string $key, $default = null)
     {
        return $this->cookie[$key] ?? $default;
     }
+
     public function uri(): string
     {
         return $this->uri;

@@ -15,8 +15,8 @@ $injector->alias(Request::class, Request::class);
 global $injector;
 
 // инициализация переменных окружения
-$dotenv = Dotenv::createImmutable(__DIR__  . '/');
-$dotenv->load();
+Dotenv::createImmutable(__DIR__  . '/')
+    ->load();
 
 // инициализация orm
 $capsule = new Manager();

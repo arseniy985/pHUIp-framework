@@ -1,212 +1,232 @@
-### Описание
-Самопис небольшой PHP фреймворк. Работает намного быстрее laravel, symphony и yii
+# pHUIp Framework
 
-### Установка
-```shell
-$ composer require arseniy985/phuip
+Легкий и быстрый PHP фреймворк с современной архитектурой и простым API. Разработан для создания эффективных веб-приложений с минимальными накладными расходами.
 
-ИЛИ 
+## Особенности
 
-$ git clone https://github.com/arseniy985/pHUIp-framework/
+- **Высокая производительность**: Оптимизированная маршрутизация и обработка запросов
+- **Dependency Injection**: Встроенный контейнер внедрения зависимостей
+- **Шаблонизация**: Безопасный и эффективный движок шаблонов
+- **ORM**: Интеграция с Eloquent ORM от Laravel
+- **Middleware**: Гибкая система промежуточного ПО
+- **Простота использования**: Интуитивно понятный API и минимальная конфигурация
+
+## Требования
+
+- PHP 8.0 или выше
+- Composer
+- MySQL (для работы с базой данных)
+- Apache с mod_rewrite (или nginx с аналогичной конфигурацией)
+
+## Установка
+
+```bash
+# Через Composer
+composer require arseniy985/phuip
+
+# Или клонирование репозитория
+git clone https://github.com/arseniy985/pHUIp-framework/
 ```
 
-### Настройка .htaccess для того чтобы все запросы ишли на один пхп файл
-``` .htaccess
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /
+## Быстрый старт
 
-	RewriteRule ^.*$ index.php [L]
-	#		  Запрос юзера | Файл в которм прописано что открыват
+1. Настройте `.htaccess`:
+```apache
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^.*$ index.php [L]
 </IfModule>
 ```
-### `index.php` на который будут идти все запросы
-```php
-require './vendor/autoload.php';
-require "./vendor/server.php";
 
-// подключения доп библиотек, контейнера  и орм
-
-startServer();
+2. Создайте `.env` файл:
+```env
+DB_DRIVER=mysql
+DB_HOST=localhost
+DB_NAME=your_database
+DB_USER=your_username
+DB_PASSWORD=your_password
 ```
 
-### Функции для router.php
+3. Создайте базовый маршрут в `router/router.php`:
+```php
+Route::get("/", function () {
+    PageGenerator::render("home", ["title" => "Welcome!"]);
+});
+```
 
-- Создание нового эндпоинта
-  ```php
-  Route::get("/", function () {
-		// code...
-  });
-  ИЛИ
-  Route::get(
-    "/",  
-    [
-        MainController::class, /* неймспейс класса контроллера, полученный с помощью ::class */
-        "метод класса контроллера"
-    ]
-  )
-  // тоже самое с остальными методами запроса (GET, POST и тд)
-  ```
-  - Создание middleware для эндпоинта. Обязательно содержит метод handle, в котором есть вся логика
-  ```php
-  Route::get("/", function () {
-      // code...
-  })->middleware(TestMiddleware::class);
-  
-  ИЛИ 
-  
-  Route::get("/", function () {
-    //code...
-  })->middleware(function () {
-    // логика...
-    return true;
-  })
+## Архитектура
 
-  // TestMiddleware.php (http/Middlewares создавать в этом неймспейсе и директории):
-  class TestMiddleware extends Middleware // обязательно наследование
+### Маршрутизация
+
+Поддерживаются все основные HTTP методы:
+
+```php
+// Функция-обработчик
+Route::get("/", function () {
+    // ...
+});
+
+// Контроллер и метод
+Route::post("/users", [UserController::class, "create"]);
+
+// С middleware
+Route::get("/admin", [AdminController::class, "dashboard"])
+    ->middleware(AuthMiddleware::class);
+```
+
+### Контроллеры
+
+Контроллеры размещаются в `http/Controllers`:
+
+```php
+namespace http\Controllers;
+
+class UserController 
+{
+    public function show(Request $request, int $id): void
     {
-            public function handle(): true|false
-            {
-                // логика...
-                return true;
-            } 
+        $user = User::find($id);
+        PageGenerator::render('user', ['user' => $user]);
     }
-## Контроллеры
-- Контроллеры создаются в http/Controllers имеют соответствующий неймспейс 
-  ```php
-  namespace http\Controllers;
+}
+```
 
-  use http\Request;
-  
-  class MainController 
-  {
-      public function generateTestPage(): void
-      {
-          generatePage('start');
-      }
+### Шаблонизация
 
-      public function testInjection(Request $request): void
-      {
-          responseHtml(print_r($request, true), 200);
-      }
-  }
-  ```
-## Внедрение завиисимостей (любых обьектов)
-- Зависимости определяются в index.php 
-- При введении новой библиотеки необходимо зарегистрировать ее, дальше можно принимать ее обьект в аргументах
-  ```php
-    $injector->alias(Request::class, Request::class);
-  // $injector->alias(КлассЗависимости::class, АлиасКлассаЗависимости(можно тот же класс)::class);
-  ```
-  Теперь вы можете указать в аргументах метода миддлвейра или контроллера данный обьект и он будет туда передан:
-  ```php
-    public function testInjection(Request $request): void
+Система шаблонов поддерживает:
+
+- Переменные: `{{ $variable }}`
+- Функции: `{{ strtoupper($name) }}`
+- Безопасный вывод HTML
+- Кэширование шаблонов
+
+Структура шаблонов:
+```
+resources/
+└── pages/
+    └── [page_name]/
+        ├── css/
+        │   └── page.css
+        ├── js/
+        │   └── page.js
+        └── page.php
+```
+
+### Middleware
+
+Middleware может быть определено как класс или замыкание:
+
+```php
+// Класс
+class AuthMiddleware extends Middleware
+{
+    public function handle(): bool
     {
-        responseHtml(print_r($request, true), 200);
-    } // Контейнер зависимости сам создал и передал обьект в $request
-  ```
-## Генерация страницы
-- Все происходит с помощью функции generatePage("название страницы", ['названиеПеременной' => Содержание])  
-  Второй аргумент необязателен. Переданный массив разбивается на переменные и передается в страницу, переменные всегда можно вызвать, например <?php echo users[0] ? >
-  ```php
-  Route::get("/", function () {
- 	    generatePage(
-            "start",
-            ['users' => ['user1', 'user2']]
-        );
-  });
-  ```
-- Структура файлов при этом такая:
-  ```
-  └── resources
-    └── pages
-       └── [start]
-         └── css
-           └── page.css
-         └── js
-            └── page.js
-       └── page.php
-  ```
-- Шаблон страницы находится в router/Page.php
+        return isset($_SESSION['user']);
+    }
+}
 
-## ORM (работа с базой данных)
-- Здесь встроена orm от laravel - Eloquent. Имеет точно такие же методы.
-- При этом миграции делаются сами.
-- Перед началом работы необходимо заполнить .env:
-  ```dotenv
-  DB_DRIVER=mysql
-  DB_HOST=localhost
-  DB_NAME=frameworktest
-  DB_USER=root
-  DB_PASSWORD=root
-  ```
-- Модели создаются в database/model и обязательно наследуются от use Illuminate\Database\Eloquent\Model.
-  ```php
-  namespace Database\Models;
+// Замыкание
+Route::get("/admin", fn() => view("admin"))
+    ->middleware(function () {
+        return checkPermissions("admin");
+    });
+```
 
-  use Illuminate\Database\Eloquent\Model;
+### Работа с базой данных
 
-  class Post extends Model
-  {
-    // таблица привязанная к этой модели
+Используется Eloquent ORM:
+
+```php
+namespace Database\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
     protected $table = 'posts';
-
     protected $fillable = ['title', 'content'];
-  }
-  ```
-- Использование этих моделей делается в соответствии с документацией Eloquent  https://laravel.com/docs/11.x/eloquent
-- В каждую запись вставляются created_at и updated_at формата datetime.
-  ```sql
-  CREATE TABLE posts (
-    id int unsigned auto_increment primary key ,
-    title varchar(300) not null,
-    content varchar(1500) not null,
-    updated_at datetime not null,
-    created_at datetime not null
-  )
-  ```
-- В случае если хотите их отключить можно указать  
-  ```php
-  class Post extends Model
-  {
-    protected $table = 'posts';
-
-    protected $fillable = ['title', 'content'];
-
-    // указываем тут
+    
+    // Отключение timestamps если нужно
     public $timestamps = false;
-  }
-  ```
-## Ответы
-- Ответ 404 
-  ```php
-  response404()
-  ```
-- Ответ 500
-  ```php
-  response500()
-  ```
-- Ответ json
-  ```php 
-  // $data - информация в ответ, будет превращена в json
-  // $status - статус ответа
-  responseJson($data, $status)
-  ```
-- Ответ html
-  ```php
-  // $data - информация в ответ
-  // $status - статус ответа
-  responseHtml($data, $status)
-  ```
-## Функции - помошники
-- Замер времени выполнения кода
-  ```php
-  $time = debugTime(function () {
-    //любой код
-  });
-  //возвращает microtime выполнения кода
-  ```
-- Получение переменной из .env 
-  ```php
-  config($ключ);
-  ```
+}
+```
+
+### Dependency Injection
+
+Регистрация зависимостей в `index.php`:
+
+```php
+$injector->alias(UserRepository::class, MySQLUserRepository::class);
+```
+
+Автоматическое внедрение в контроллеры и middleware:
+
+```php
+public function show(Request $request, UserRepository $users)
+{
+    $user = $users->find($request->get('id'));
+    // ...
+}
+```
+
+### HTTP Ответы
+
+```php
+// JSON ответ
+responseJson(['status' => 'success'], 200);
+
+// HTML ответ
+responseHtml('<h1>Hello</h1>', 200);
+
+// Ошибки
+response404();
+response500();
+```
+
+## Ограничения
+
+1. **Шаблонизатор**:
+   - Не поддерживает сложные условные конструкции
+   - Нет встроенной системы кэширования компилированных шаблонов
+
+2. **Маршрутизация**:
+   - Нет поддержки групп маршрутов
+   - Нет автоматической валидации параметров маршрута
+
+3. **ORM**:
+   - Ограничен функционалом Eloquent
+   - Нет встроенной системы миграций
+
+4. **Middleware**:
+   - Нет поддержки глобальных middleware
+   - Нет приоритетов выполнения
+
+## Производительность
+
+- Минимальное использование памяти
+- Быстрая маршрутизация
+- Оптимизированная шаблонизация
+- Кэширование там, где это возможно
+
+## Безопасность
+
+- Экранирование вывода в шаблонах
+- Защита от SQL-инъекций через ORM
+- Безопасная обработка пользовательского ввода
+- Отсутствие eval() в шаблонизаторе
+
+## Вклад в разработку
+
+1. Форкните репозиторий
+2. Создайте ветку для новой функции
+3. Отправьте пулл-реквест
+
+## Лицензия
+
+MIT License - см. [LICENSE.txt](LICENSE.txt)
+
+## Автор
+
+Arseniy Druzhinin - [arseniy985](https://github.com/arseniy985)

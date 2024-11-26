@@ -28,6 +28,7 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
             'http\\Middlewares\\' => 17,
             'http\\Controllers\\' => 17,
             'http\\' => 5,
+            'html\\' => 5,
         ),
         'S' => 
         array (
@@ -99,6 +100,10 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         'http\\' => 
         array (
             0 => __DIR__ . '/../..' . '/http',
+        ),
+        'html\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/http/app',
         ),
         'Symfony\\Polyfill\\Php83\\' => 
         array (
