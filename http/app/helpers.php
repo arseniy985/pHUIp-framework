@@ -4,21 +4,6 @@ declare(strict_types=1);
 use http\Request;
 
 /**
- * Массивы с папками
- * @var array{css: array, js: array}
- */
-
-/**
- * Путь к [name]
- */
-define("PAGE_WRAPPER", explode("/", URIPath));
-
-function responseContentType(string $filepath): void
-{
-	header("Content-type: " . getFileContentType($filepath));
-}
-
-/**
  * Возвращает код ответа 404
  */
 function response404(): void
@@ -51,35 +36,24 @@ function responseHtml(string $text, int $status) {
     exit();
 }
 
-/**
- * Функция которая проверяет содержит ли запрос обращение к файлу
- * @param string $filename - путь к файлу и это путь должен начинаться с `/`ё
- */
-function thisIsSourceFile(string $filename): bool
-{
-	if (strpos($filename, ".") == 0) {
-		return false;
-	} else {
-		if (isset(PAGE_WRAPPER[2])) {
-			return true;
-		} else {
-			$type = explode(".", $filename)[1]; // Тип файла
-			return (bool)MIME_TYPES[$type];
-		}
-	}
-}
-/**
- * Возвращает `Content-type` для ответа пользователю
- * @param string $filename - путь к файлу и это путь должен начинаться с `/`
- * @return string - MIME_TYPE | `text/plain`
- */
-function getFileContentType(string $filename): string
-{
-
-	$type = explode(".", $filename)[1]; // тип файла из запроса
-	return MIME_TYPES[$type] ? MIME_TYPES[$type] : "text/plain";
-}
-
 function request(): Request {
     return new Request();
+}
+
+/**
+ * @param callable $func та функция замер которой производится
+ * @return mixed значение которое возвращает переданная коллбек функция
+ * Замеряет сколько выполняется код в microtime
+ */
+function debugTime(callable $func): float
+{
+    $startTime = microtime(true);
+    $res = $func();
+    $endTime = microtime(true);
+    return $endTime-$startTime;
+}
+
+function config(string $key)
+{
+    return $_ENV[$key];
 }

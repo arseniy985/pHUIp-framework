@@ -21,11 +21,9 @@
       "http\\Controllers\\": "http/Controllers",
       "http\\Middlewares\\": "http/Middlewares",
       "http\\": "http/",
-
+      "database\\": "database/",
       "Database\\Models\\": "database/models",
-      "Database\\": "database/",
-
-      "html\\": "http/app"
+      "Database\\": "database/"
     }
   },
   "require": {
