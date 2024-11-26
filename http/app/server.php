@@ -15,7 +15,7 @@ function getUriPath(string $str): string
  * @return mixed значение которое возвращает переданная коллбек функция
  * Замеряет сколько выполняется код в microtime
  */
-function debugTime(callable $func): mixed
+function debugTime(callable $func): int
 {
     $startTime = microtime(true);
     $res = $func();

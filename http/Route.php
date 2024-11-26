@@ -10,6 +10,8 @@ class Route
     private string $URI;
     private $func;
     private array $middleware = [];
+    private static array $reflectionCache = [];
+    private static array $instanceCache = [];
 
     /**
      * @param string $URI
@@ -43,32 +45,52 @@ class Route
      */
     public static function addRoute(string $method, string $URI, callable|array $func): ?Route
     {
-        if ($_SERVER['REQUEST_METHOD'] === $method) {
-            return self::route($URI, $func);
+        if ($_SERVER['REQUEST_METHOD'] !== $method) {
+            return null;
         }
-        return null;
+        return self::route($URI, $func);
     }
 
     private static function route(string $URI, callable|array $func): ?Route
     {
         global $injector;
-        $arguments = [];
-        $reflection = is_array($func) ? new ReflectionMethod($func[0], $func[1]): new ReflectionFunction($func);
-        foreach ($reflection->getParameters() as $parameter) {
-            $class = $parameter->getType()->getName();
-            if ($class) {
-                $arguments[] = $injector->make($class);
+
+        // Кэшируем reflection для повторного использования
+        $cacheKey = is_array($func) ? "{$func[0]}::{$func[1]}" : 'closure';
+        if (!isset(self::$reflectionCache[$cacheKey])) {
+            self::$reflectionCache[$cacheKey] = is_array($func) ? 
+                new ReflectionMethod($func[0], $func[1]) : 
+                new ReflectionFunction($func);
+        }
+        $reflection = self::$reflectionCache[$cacheKey];
+
+        // Кэшируем аргументы
+        if (!isset(self::$instanceCache[$cacheKey])) {
+            $arguments = [];
+            foreach ($reflection->getParameters() as $parameter) {
+                $type = $parameter->getType();
+                if ($type && !$type->isBuiltin()) {
+                    $class = $type->getName();
+                    $arguments[] = $injector->make($class);
+                }
             }
+            self::$instanceCache[$cacheKey] = $arguments;
+        }
+        $arguments = self::$instanceCache[$cacheKey];
+
+        if (is_array($func)) {
+            $instance = $injector->make($func[0]);
+            $method = $func[1];
+            $callback = static function() use ($instance, $method, $arguments) {
+                return $instance->$method(...$arguments);
+            };
+        } else {
+            $callback = static function() use ($func, $arguments) {
+                return $func(...$arguments);
+            };
         }
 
-        $callback = function () use ($arguments, $injector, $func) {
-            is_array($func) ?
-                call_user_func_array([$injector->make($func[0]), $func[1]], $arguments) :
-                call_user_func_array($func, $arguments);
-        };
-
         $_SERVER['ROUTS'][$URI] = $callback;
-
         return new Route($URI, $callback);
     }
 
@@ -110,18 +132,32 @@ class Route
     {
         $method = "handle";
         global $injector;
-        $arguments = [];
         
-        $reflection = new ReflectionMethod($middleware, $method);
-        foreach ($reflection->getParameters() as $parameter) {
-            $class = $parameter->getType()->getName();
-            if ($class) {
-                $arguments[] = $injector->make($class);
-            }
+        // Кэшируем reflection для middleware
+        $cacheKey = "{$middleware}::{$method}";
+        if (!isset(self::$reflectionCache[$cacheKey])) {
+            self::$reflectionCache[$cacheKey] = new ReflectionMethod($middleware, $method);
         }
+        $reflection = self::$reflectionCache[$cacheKey];
 
-        $callback = function () use ($method, $arguments, $injector, $middleware) {
-            return call_user_func_array([$injector->make($middleware), $method], $arguments);
+        // Кэшируем аргументы middleware
+        if (!isset(self::$instanceCache[$cacheKey])) {
+            $arguments = [];
+            foreach ($reflection->getParameters() as $parameter) {
+                $type = $parameter->getType();
+                if ($type && !$type->isBuiltin()) {
+                    $class = $type->getName();
+                    $arguments[] = $injector->make($class);
+                }
+            }
+            self::$instanceCache[$cacheKey] = $arguments;
+        }
+        $arguments = self::$instanceCache[$cacheKey];
+
+        // Оптимизируем middleware callback
+        $instance = $injector->make($middleware);
+        $callback = static function() use ($instance, $method, $arguments) {
+            return $instance->$method(...$arguments);
         };
 
         $this->middleware[] = $callback;
@@ -132,8 +168,9 @@ class Route
                     return;
                 }
             }
-            call_user_func($this->func);
+            ($this->func)();
         };
+        
         return $this;
     }
 }

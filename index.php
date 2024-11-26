@@ -18,6 +18,7 @@ global $injector;
 Dotenv::createImmutable(__DIR__  . '/')
     ->load();
 
+
 // инициализация orm
 $capsule = new Manager();
 $capsule->addConnection([
@@ -33,4 +34,7 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+
 startServer();
+
+
