@@ -24,11 +24,11 @@ class Route
     }
 
     /**
-     * Внутренний метод для создания маршрута с указанным методом
+     * Создает новый маршрут для указанного HTTP метода
      * @param string $method HTTP метод (GET, POST, etc)
-     * @param string $URI путь
-     * @param callable|array $func обработчик
-     * @return Route|null
+     * @param string $URI путь маршрута
+     * @param callable|array $func обработчик маршрута. Если массив, то [класс, метод]
+     * @return Route|null возвращает Route если метод запроса совпадает с $method, иначе null
      */
     public static function addRoute(string $method, string $URI, callable|array $func): ?Route
     {
