@@ -5,8 +5,9 @@ use Dotenv\Dotenv;
 use http\Request;
 use Illuminate\Database\Capsule\Manager;
 
-require './vendor/autoload.php';
-require "./http/app/server.php";
+require_once './vendor/autoload.php';
+require_once "./http/app/server.php";
+require_once "./http/app/helpers.php";
 
 // создание контейнера зависимотей
 $injector = new Injector();

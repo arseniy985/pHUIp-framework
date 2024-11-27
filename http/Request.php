@@ -29,14 +29,24 @@ class Request
         return $_SERVER["HTTP_" . strtoupper($key)] ?? $default;
     }
 
-    public function get(string $key, $default = null)
+    /**
+     * Получить значение из $_GET
+     * @param string $key
+     * @return string|null
+     */
+    public function get(string $key): ?string
     {
-        return $this->get[$key] ?? $default;
+        return $this->get[$key] ?? null;
     }
 
-    public function post(string $key, $default = null)
+    /**
+     * Получить значение из $_POST
+     * @param string $key
+     * @return string|null
+     */
+    public function post(string $key): ?string
     {
-        return $this->post[$key] ?? $default;
+        return $this->post[$key] ?? null;
     }
 
     public function file(string $key)
@@ -58,7 +68,7 @@ class Request
     }
 
     /**
-     * Устанавливает параметры маршрута
+     * Установить параметры маршрута
      * @param array $params
      */
     public function setRouteParams(array $params): void
@@ -67,19 +77,18 @@ class Request
     }
 
     /**
-     * Получает значение параметра маршрута
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
+     * Получить значение параметра из URL
+     * @param string $name Имя параметра
+     * @return string|null Значение параметра или null, если параметр не найден
      */
-    public function param(string $key, $default = null)
+    public function param(string $name): ?string
     {
-        return $this->routeParams[$key] ?? $default;
+        return $this->routeParams[$name] ?? null;
     }
 
     /**
-     * Получает все параметры маршрута
-     * @return array
+     * Получить все параметры маршрута
+     * @return array Массив параметров
      */
     public function params(): array
     {
@@ -94,5 +103,23 @@ class Request
     public function uri(): string
     {
         return $this->uri;
+    }
+
+    /**
+     * Получить все значения из $_GET
+     * @return array
+     */
+    public function getAll(): array
+    {
+        return $_GET;
+    }
+
+    /**
+     * Получить все значения из $_POST
+     * @return array
+     */
+    public function postAll(): array
+    {
+        return $_POST;
     }
 }

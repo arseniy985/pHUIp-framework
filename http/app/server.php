@@ -46,19 +46,42 @@ function startServer(): void
 		'svgz' => 'image/svg+xml',
 	));
 
-    require("./http/app/helpers.php");
     $_SERVER["ROUTS"] = [];
-
     include_once("./router/router.php");
 
-    if (isset($_SERVER["ROUTS"][URIPath])) {
-        if (is_array($_SERVER["ROUTS"][URIPath])) {
-            list($className, $method) = $_SERVER["ROUTS"][URIPath];
-            call_user_func(array(new $className, $method));
-        } else {
-            $_SERVER["ROUTS"][URIPath]();
+    // Получаем объект Request из контейнера
+    global $injector;
+    $request = $injector->make(Request::class);
+
+    // Проверяем все маршруты на соответствие
+    foreach ($_SERVER["ROUTS"] as $pattern => $handler) {
+        // Преобразуем шаблон маршрута в регулярное выражение
+        $routePattern = preg_replace('/\{([^}]+)\}/', '(?P<$1>[^/]+)', $pattern);
+        $routePattern = str_replace('/', '\/', $routePattern);
+        $routePattern = '/^' . $routePattern . '$/';
+
+        // Проверяем соответствие текущего URL шаблону
+        if (preg_match($routePattern, URIPath, $matches)) {
+            if (count($matches) > 1) {
+                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+                unset($params[0]); 
+                $request->setRouteParams($params);
+            }
+
+            // Выполняем обработчик маршрута
+            if (is_array($handler)) {
+                list($className, $method) = $handler;
+                $instance = $injector->make($className);
+                call_user_func(array($instance, $method), $request);
+            } else {
+                $handler($request);
+            }
+            return;
         }
-    } else {
-        response404();
     }
+
+    // Если не найден подходящий маршрут
+    response404();
 }
+
+?>

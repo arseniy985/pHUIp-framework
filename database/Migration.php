@@ -1,6 +1,6 @@
 <?php
 
-namespace database;
+namespace Database;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Blueprint;

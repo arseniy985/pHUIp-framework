@@ -70,10 +70,33 @@ Route::get("/", function () {
 Route::get("/", [HomeController::class, "index"]);
 Route::post("/users", [UserController::class, "create"]);
 
+// Динамические маршруты с параметрами
+Route::get("/users/{id}", [UserController::class, "show"]);
+Route::get("/posts/{categoryId}/comments/{commentId}", [PostController::class, "showComment"]);
+
+// Получение параметров в контроллере
+class UserController 
+{
+    public function show(Request $request): void
+    {
+        // Получение одного параметра
+        $userId = $request->param('id');
+        
+        // Получение всех параметров маршрута
+        $params = $request->params();
+        
+        // Работа с данными
+        $user = $this->userRepository->find($userId);
+        PageGenerator::render('user', ['user' => $user]);
+    }
+}
+
 // Группы маршрутов с префиксом
 Route::group('/admin', function(RouteGroup $group) {
     $group->get('/dashboard', [AdminController::class, 'index']);
-    $group->get('/users', [AdminController::class, 'list']);
+    
+    // Динамические маршруты в группах
+    $group->get('/users/{id}', [AdminController::class, 'showUser']);
     
     // Вложенные группы
     $group->group('/settings', function(RouteGroup $settings) {
@@ -112,9 +135,9 @@ namespace http\Controllers;
 
 class UserController 
 {
-    public function show(Request $request, UserRepository $users, int $id): void
+    public function show(Request $request): void
     {
-        $user = $users->find($id);
+        $user = User::find($request->param('id'));
         PageGenerator::render('user', ['user' => $user]);
     }
 }

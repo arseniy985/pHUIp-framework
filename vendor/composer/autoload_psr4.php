@@ -10,7 +10,7 @@ return array(
     'http\\Middlewares\\' => array($baseDir . '/http/Middlewares'),
     'http\\Controllers\\' => array($baseDir . '/http/Controllers'),
     'http\\' => array($baseDir . '/http'),
-    'database\\' => array($baseDir . '/database'),
+    'html\\' => array($baseDir . '/http/app'),
     'Symfony\\Polyfill\\Php83\\' => array($vendorDir . '/symfony/polyfill-php83'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
