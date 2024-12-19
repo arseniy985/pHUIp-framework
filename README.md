@@ -143,6 +143,23 @@ class UserController
 }
 ```
 
+### Dependency container
+
+Регистрация зависимостей производится в `http/provider.php`:
+```php
+<?php
+
+use app\http\Request;
+use Auryn\Injector;
+
+$injector = new Injector();
+
+// Регистрация зависимостей
+$injector->alias(Request::class, Request::class);
+
+global $injector;
+```
+
 ### Шаблонизация
 
 Система шаблонов поддерживает:
