@@ -1,16 +1,26 @@
 <?php
 
-use html\PageGenerator;
+use app\http\Request;
+use app\http\Route;
+use app\http\RouteGroup;
+use app\view\PageGenerator;
 use http\Controllers\TestController;
 use http\Middlewares\TestMiddleware;
-use http\Route;
-use http\Request;
 
 Route::get("/{id}", function (Request $request) {
     PageGenerator::render(
         'test',
-        ['id' => $request->param('id'), 'test' => 123]
+        ['id' => $request->param('id')]
     );
 });
 Route::get("/", [TestController::class, "test"])
     ->middleware(TestMiddleware::class);
+
+Route::group('', function (RouteGroup $group) {
+    $group->post('/user', function () {
+        echo 'pidor';
+    });
+    $group->get('/users', function () {
+        responseJson('adsad', 200);
+    });
+});

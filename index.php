@@ -1,8 +1,8 @@
 <?php
 
+use app\http\Request;
 use Auryn\Injector;
 use Dotenv\Dotenv;
-use http\Request;
 use Illuminate\Database\Capsule\Manager;
 
 require_once './vendor/autoload.php';

@@ -2,8 +2,8 @@
 
 namespace http\Controllers;
 
-use html\PageGenerator;
-use http\Request;
+use app\http\Request;
+use app\view\PageGenerator;
 
 class TestController
 {

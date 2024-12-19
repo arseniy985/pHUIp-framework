@@ -2,7 +2,7 @@
 
 namespace http\Middlewares;
 
-use http\Request;
+use app\http\Middleware;
 
 class TestMiddleware extends Middleware
 {

@@ -113,7 +113,7 @@ Middleware определяются как классы с методом `handl
 ```php
 namespace http\Middlewares;
 
-class AuthMiddleware extends Middleware
+use app\http\Middleware;class AuthMiddleware extends Middleware
 {
     public function handle(AuthService $auth): bool
     {

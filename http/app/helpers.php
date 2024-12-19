@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use http\Request;
+use app\http\Request;
 
 /**
  * Возвращает код ответа 404
