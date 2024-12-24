@@ -8,7 +8,9 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
+        '23f09fe3194f8c2f70923f90d6702129' => __DIR__ . '/..' . '/illuminate/collections/functions.php',
         '60799491728b879e74601d83e38b2cad' => __DIR__ . '/..' . '/illuminate/collections/helpers.php',
         '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
@@ -29,6 +31,11 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
             'http\\Controllers\\' => 17,
             'http\\' => 5,
             'html\\' => 5,
+        ),
+        'a' => 
+        array (
+            'app\\http\\' => 9,
+            'app\\' => 4,
         ),
         'S' => 
         array (
@@ -104,6 +111,14 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
         'html\\' => 
         array (
             0 => __DIR__ . '/../..' . '/http/app',
+        ),
+        'app\\http\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/http',
+        ),
+        'app\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/DI',
         ),
         'Symfony\\Polyfill\\Php83\\' => 
         array (

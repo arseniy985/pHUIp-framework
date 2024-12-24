@@ -152,12 +152,14 @@ class UserController
 use app\http\Request;
 use Auryn\Injector;
 
-$injector = new Injector();
+$injector = new \app\Container();
 
 // Регистрация зависимостей
-$injector->alias(Request::class, Request::class);
+$injector->singleton(Request::class, Request::class);
+$injector->bind('интерфейс или класс', 'класс');
 
-global $injector;
+// Создание экземпляра класса
+\app\Container::make('интерфейс или класс(алиас)')
 ```
 
 ### Шаблонизация

@@ -23,7 +23,9 @@
       "http\\": "http/",
       "Database\\Models\\": "database/models",
       "Database\\": "database/",
-      "html\\": "http/app"
+      "html\\": "http/app",
+      "app\\": "app/DI",
+      "app\\http\\": "app/http"
     }
   },
   "require": {

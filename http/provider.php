@@ -1,11 +1,9 @@
 <?php
 
+use app\Container;
 use app\http\Request;
-use Auryn\Injector;
 
-$injector = new Injector();
+$injector = new Container();
 
 // Регистрация зависимостей
-$injector->alias(Request::class, Request::class);
-
-global $injector;
+$injector->singleton(Request::class, Request::class);

@@ -6,7 +6,7 @@ use Dotenv\Dotenv;
 use Illuminate\Database\Capsule\Manager;
 
 require_once './vendor/autoload.php';
-require_once "./http/app/server.php";
+require_once "./app/http/server.php";
 require_once "./http/app/helpers.php";
 
 require_once 'http/provider.php';

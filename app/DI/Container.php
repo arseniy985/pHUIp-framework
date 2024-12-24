@@ -1,34 +1,46 @@
 <?php
 
-namespace App\DI;
+namespace app;
 
 use Exception;
 
 class Container
 {
     private array $bindings;
+    private static object $instance;
 
-    public function bind(string $allias, string $binding): void
+    public function __construct()
+    {
+        self::$instance = $this;
+    }
+
+    public function bind(string $allias, string|callable $binding): void
     {
         $this->bindings[$allias] = $binding;
     }
 
-    public function singleton(string $allias, string $binding): void
+    public function singleton(string $allias, string|callable $binding): void
     {
-        $this->bindings[$allias] = new $binding;
+        $this->bindings[$allias] = is_callable($binding) ?
+            $binding() : new $binding;
     }
 
     /**
      * @throws Exception
      */
-    public function make(string $allias): object
+    public static function make(string $allias): object
     {
-        $class = $this->bindings[$allias];
-        if (!$class) {
+        $class = self::$instance->bindings[$allias] ?? null;
+        if ($class == null) {
             throw new Exception('Класс не найден');
         };
 
-        return is_object($class) ?
-            $class : new $class;
+        if (is_object($class)) {
+            return $class;
+        }
+        if (is_callable($class)) {
+            return $class();
+        }
+        return new $class;
     }
 }

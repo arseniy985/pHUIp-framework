@@ -1,5 +1,6 @@
 <?php
 
+use app\Container;
 use app\http\Request;
 
 /**
@@ -49,9 +50,7 @@ function startServer(): void
     $_SERVER["ROUTS"] = [];
     include_once("./router/router.php");
 
-    // Получаем объект Request из контейнера
-    global $injector;
-    $request = $injector->make(Request::class);
+    $request = Container::make(Request::class);
 
     // Проверяем все маршруты на соответствие
     foreach ($_SERVER["ROUTS"] as $pattern => $handler) {
@@ -69,7 +68,7 @@ function startServer(): void
 
             if (is_array($handler)) {
                 list($className, $method) = $handler;
-                $instance = $injector->make($className);
+                $instance = Container::make($className);
 
                 // Получаем аргументы метода
                 $reflectionMethod = new ReflectionMethod($instance, $method);
@@ -80,7 +79,7 @@ function startServer(): void
                 foreach ($methodParams as $param) {
                     $paramClass = $param->getType();
                     if ($paramClass) {
-                        $arguments[] = $injector->make($paramClass->getName());
+                        $arguments[] = Container::make($paramClass->getName());
                     } elseif ($param->isDefaultValueAvailable()) {
                         $arguments[] = $param->getDefaultValue();
                     } else {
